@@ -1,10 +1,19 @@
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import getSeriesName from "../services/api";
 import "../styles/app.css";
 
+
 const App = () => {
-  const [searchValue, setSearchValue] = useState([]);
-  const [series, setSeries] = useState("");
+  const [series, setSeries] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+
+  useEffect(() => {
+    getSeriesName(searchValue).then((response) => {
+        console.log("Buscando:", searchValue);
+        console.log("Respuesta:", response);
+      setSeries(response);
+    });
+  }, [searchValue]);
 
   const handleOnChange = (ev) => {
     setSearchValue(ev.target.value);
@@ -20,10 +29,10 @@ const App = () => {
         value={searchValue}
         onChange={handleOnChange}
       />
-      <h3>Nombre de la serie elegida: {} </h3>
+      <h3>Nombre de la serie elegida: {searchValue} </h3>
       <ul>
         {series.map((item, index) => {
-          return <li key={index}>{item.name}</li>;
+          return <li key={index}>{item.show.name}</li>;
         })}
       </ul>
     </>
